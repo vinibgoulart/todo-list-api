@@ -7,7 +7,9 @@ import (
 func UserPublicRouter() chi.Router {
 	r := chi.NewRouter()
 
-	userPublicRouterHandler := UserPublicRouterHandler{}
+	userPublicRouterHandler := UserPublicRouterHandler{
+		storage: &UserStore{},
+	}
 
 	r.Post("/", userPublicRouterHandler.CreateUser)
 
