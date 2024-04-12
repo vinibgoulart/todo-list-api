@@ -40,5 +40,11 @@ func (u *UserStore) GetUser(id string) *User {
 }
 
 func (u *UserStore) StoreUser(user User) {
+	exists := u.GetUser(user.ID) != nil
+
+	if exists {
+		return
+	}
+
 	users = append(users, &user)
 }
