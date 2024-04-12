@@ -18,6 +18,7 @@ func main() {
 		w.Write([]byte("API Working"))
 	})
 
+	r.Mount("/register", user.UserPublicRouter())
 	r.Mount("/users", user.UserRouter())
 
 	http.ListenAndServe(":3000", r)

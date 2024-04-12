@@ -7,9 +7,7 @@ func UserRouter() chi.Router {
 
 	userRouterHandler := UserRouterHandler{}
 
-	r.Get("/", userRouterHandler.ListUsers)
-	r.Post("/", userRouterHandler.CreateUser)
-	r.Get("/{id}", userRouterHandler.GetUsers)
+	r.Get("/{id}", userRouterHandler.GetUser)
 	r.Put("/{id}", userRouterHandler.UpdateUser)
 	r.Delete("/{id}", userRouterHandler.DeleteUser)
 
