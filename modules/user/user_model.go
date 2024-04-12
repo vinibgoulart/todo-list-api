@@ -29,3 +29,7 @@ func GetUser(id string) *User {
 
 	return nil
 }
+
+func StoreUser(user User) {
+	users = append(users, &user)
+}
