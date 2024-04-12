@@ -8,10 +8,11 @@ import (
 )
 
 type UserRouterHandler struct {
+	storage UserStorage
 }
 
 func (u *UserRouterHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
-	err := json.NewEncoder(w).Encode(ListUsers())
+	err := json.NewEncoder(w).Encode(u.storage.ListUsers())
 
 	if err != nil {
 		http.Error(w, "Internal error", http.StatusInternalServerError)
@@ -21,7 +22,7 @@ func (u *UserRouterHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
 
 func (u *UserRouterHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "id")
-	user := GetUser(id)
+	user := u.storage.GetUser(id)
 
 	if user == nil {
 		http.Error(w, "User not found", http.StatusNotFound)
@@ -34,6 +35,3 @@ func (u *UserRouterHandler) GetUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 }
-
-func (u *UserRouterHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {}
-func (u *UserRouterHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {}

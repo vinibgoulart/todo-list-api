@@ -1,5 +1,14 @@
 package user
 
+type UserStorage interface {
+	ListUsers() []*User
+	GetUser(id string) *User
+	StoreUser(user User)
+}
+
+type UserStore struct {
+}
+
 type User struct {
 	ID       string `json:"id"`
 	Name     string `json:"name"`
@@ -16,11 +25,11 @@ var users = []*User{
 	},
 }
 
-func ListUsers() []*User {
+func (u *UserStore) ListUsers() []*User {
 	return users
 }
 
-func GetUser(id string) *User {
+func (u *UserStore) GetUser(id string) *User {
 	for _, user := range users {
 		if user.ID == id {
 			return user
@@ -30,6 +39,6 @@ func GetUser(id string) *User {
 	return nil
 }
 
-func StoreUser(user User) {
+func (u *UserStore) StoreUser(user User) {
 	users = append(users, &user)
 }

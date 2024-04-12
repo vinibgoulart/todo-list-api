@@ -5,7 +5,9 @@ import (
 	"net/http"
 )
 
-type UserPublicRouterHandler struct{}
+type UserPublicRouterHandler struct {
+	storage UserStorage
+}
 
 func (u *UserPublicRouterHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	var user User
@@ -16,7 +18,7 @@ func (u *UserPublicRouterHandler) CreateUser(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	StoreUser(user)
+	u.storage.StoreUser(user)
 
 	err = json.NewEncoder(w).Encode(user)
 

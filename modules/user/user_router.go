@@ -8,8 +8,6 @@ func UserRouter() chi.Router {
 	userRouterHandler := UserRouterHandler{}
 
 	r.Get("/{id}", userRouterHandler.GetUser)
-	r.Put("/{id}", userRouterHandler.UpdateUser)
-	r.Delete("/{id}", userRouterHandler.DeleteUser)
 
 	return r
 }
