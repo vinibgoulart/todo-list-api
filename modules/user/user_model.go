@@ -2,7 +2,7 @@ package user
 
 type UserStorage interface {
 	ListUsers() []*User
-	GetUser(id string) *User
+	GetUser(string) *User
 	StoreUser(user User)
 }
 

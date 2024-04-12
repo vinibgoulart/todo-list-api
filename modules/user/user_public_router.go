@@ -1,6 +1,8 @@
 package user
 
-import "github.com/go-chi/chi/v5"
+import (
+	"github.com/go-chi/chi/v5"
+)
 
 func UserPublicRouter() chi.Router {
 	r := chi.NewRouter()
