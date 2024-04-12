@@ -3,7 +3,7 @@ package main
 import (
 	"net/http"
 
-	"github.com/vinibgoulart/todo-list/user"
+	"github.com/vinibgoulart/todo-list/modules/user"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
