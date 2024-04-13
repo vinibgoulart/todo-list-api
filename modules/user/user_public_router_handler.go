@@ -21,9 +21,15 @@ func (u *UserPublicRouterHandler) CreateUser(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		u.storage.Insert(db, user)
+		userCreated, err := u.storage.Insert(db, user)
 
-		res, err := json.Marshal(user)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		res, err := json.Marshal(userCreated)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
