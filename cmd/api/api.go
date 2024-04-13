@@ -16,6 +16,7 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+
 	logger.Info("DB connected!")
 
 	r := server.SetupHttpServer(db)

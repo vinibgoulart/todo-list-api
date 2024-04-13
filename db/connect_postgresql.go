@@ -7,6 +7,7 @@ import (
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+	"github.com/vinibgoulart/todo-list/lib"
 )
 
 var db *sql.DB
@@ -26,6 +27,11 @@ func ConnectDatabase() (*sql.DB, error) {
 
 	dbInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbHost, dbPort, dbUser, dbPassword, dbName)
+
+	logger := lib.NewLogger("main")
+
+	logger.Info("Connecting to database...")
+	logger.Info(dbInfo)
 
 	db, err := sql.Open("postgres", dbInfo)
 	if err != nil {

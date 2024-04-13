@@ -3,6 +3,7 @@ package user
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -15,31 +16,39 @@ type UserRouterHandler struct {
 
 func (u *UserRouterHandler) Get(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("UserRouterHandler.Get -> http.HandlerFunc")
 		idStr := chi.URLParam(r, "id")
 		id, err := strconv.ParseInt(idStr, 10, 64)
 
 		if err != nil {
-			http.Error(w, "Invalid ID", http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
 			return
 		}
 
 		user, err := u.storage.Get(db, id)
 
 		if err != nil {
-			http.Error(w, "Internal error", http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
 			return
 		}
 
 		if user == nil {
-			http.Error(w, "User not found", http.StatusNotFound)
-		}
-
-		err = json.NewEncoder(w).Encode(user)
-
-		if err != nil {
-			http.Error(w, "Internal error", http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte("User not found"))
 			return
 		}
-	}
 
+		res, err := json.Marshal(user)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Write(res)
+	}
 }

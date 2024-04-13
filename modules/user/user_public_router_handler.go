@@ -16,18 +16,23 @@ func (u *UserPublicRouterHandler) CreateUser(db *sql.DB) http.HandlerFunc {
 		err := json.NewDecoder(r.Body).Decode(&user)
 
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
 			return
 		}
 
 		u.storage.Insert(db, user)
 
-		err = json.NewEncoder(w).Encode(user)
+		res, err := json.Marshal(user)
 
 		if err != nil {
-			http.Error(w, "Internal error", http.StatusInternalServerError)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
 			return
 		}
+
+		w.WriteHeader(http.StatusCreated)
+		w.Write(res)
 	}
 
 }
