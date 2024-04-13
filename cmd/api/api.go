@@ -3,10 +3,21 @@ package main
 import (
 	"net/http"
 
+	"github.com/vinibgoulart/todo-list/db"
 	server "github.com/vinibgoulart/todo-list/http"
+	"github.com/vinibgoulart/todo-list/lib"
 )
 
 func main() {
-	r := server.SetupHttpServer()
+	logger := lib.NewLogger("main")
+
+	db, err := db.ConnectDatabase()
+
+	if err != nil {
+		logger.Fatal(err)
+	}
+	logger.Info("DB connected!")
+
+	r := server.SetupHttpServer(db)
 	http.ListenAndServe(":8080", r)
 }

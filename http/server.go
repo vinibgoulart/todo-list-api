@@ -1,6 +1,7 @@
 package server
 
 import (
+	"database/sql"
 	"net/http"
 	"time"
 
@@ -9,7 +10,7 @@ import (
 	"github.com/vinibgoulart/todo-list/modules/user"
 )
 
-func SetupHttpServer() chi.Router {
+func SetupHttpServer(db *sql.DB) chi.Router {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Logger)
@@ -19,8 +20,8 @@ func SetupHttpServer() chi.Router {
 		w.Write([]byte("API Working"))
 	})
 
-	r.Mount("/register", user.UserPublicRouter())
-	r.Mount("/user", user.UserRouter())
+	r.Mount("/register", user.UserPublicRouter(db))
+	r.Mount("/user", user.UserRouter(db))
 
 	return r
 }
