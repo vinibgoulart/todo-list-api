@@ -19,5 +19,11 @@ func main() {
 	logger.Info("DB connected!")
 
 	r := server.SetupHttpServer(db)
-	http.ListenAndServe(":8080", r)
+
+	httpServer := &http.Server{
+		Addr:    ":8080",
+		Handler: r,
+	}
+
+	httpServer.ListenAndServe()
 }
