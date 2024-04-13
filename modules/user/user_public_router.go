@@ -9,11 +9,12 @@ import (
 func UserPublicRouter(db *sql.DB) chi.Router {
 	r := chi.NewRouter()
 
-	userPublicRouterHandler := UserPublicRouterHandler{
+	userPublicRouterHandler := UserHandler{
 		storage: &UserStore{},
 	}
 
-	r.Post("/", userPublicRouterHandler.CreateUser(db))
+	r.Post("/register", userPublicRouterHandler.CreateUser(db))
+	r.Post("/login", userPublicRouterHandler.AuthenticateUser(db))
 
 	return r
 }

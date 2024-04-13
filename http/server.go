@@ -24,9 +24,9 @@ func SetupHttpServer(db *sql.DB) chi.Router {
 	r.Get("/status", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("API Working"))
 	})
+	r.Mount("/", user.UserPublicRouter(db))
 
-	r.Mount("/register", user.UserPublicRouter(db))
-	r.Mount("/user", user.UserRouter(db))
+	r.With(server.AuthMiddleware).Mount("/user", user.UserRouter(db))
 
 	return r
 }

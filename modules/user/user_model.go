@@ -8,6 +8,7 @@ import (
 
 type UserStorage interface {
 	Get(*sql.DB, string) (*User, error)
+	GetByEmail(*sql.DB, string) (*User, error)
 	Insert(*sql.DB, User) (*User, error)
 }
 
@@ -22,7 +23,21 @@ type User struct {
 }
 
 func (u *UserStore) Get(db *sql.DB, id string) (*User, error) {
-	row := db.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
+	sql := `SELECT * FROM users WHERE id=$1`
+
+	row := db.QueryRow(sql, id)
+
+	user := &User{}
+
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	return user, err
+}
+
+func (u *UserStore) GetByEmail(db *sql.DB, email string) (*User, error) {
+	sql := `SELECT * FROM users WHERE email=$1`
+
+	row := db.QueryRow(sql, email)
 
 	user := &User{}
 
@@ -32,11 +47,13 @@ func (u *UserStore) Get(db *sql.DB, id string) (*User, error) {
 }
 
 func (u *UserStore) Insert(db *sql.DB, user User) (*User, error) {
-	sql := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email`
+	sql := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING *`
+
+	row := db.QueryRow(sql, user.Name, user.Email, user.Password)
 
 	userCreated := &User{}
 
-	err := db.QueryRow(sql, user.Name, user.Email, user.Password).Scan(&userCreated.ID, &userCreated.Name, &userCreated.Email)
+	err := row.Scan(&userCreated.ID, &userCreated.Name, &userCreated.Email, &userCreated.Password)
 
 	if err != nil {
 		return nil, err

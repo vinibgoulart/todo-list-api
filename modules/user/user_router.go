@@ -9,11 +9,11 @@ import (
 func UserRouter(db *sql.DB) chi.Router {
 	r := chi.NewRouter()
 
-	userRouterHandler := UserRouterHandler{
+	UserHandler := UserHandler{
 		storage: &UserStore{},
 	}
 
-	r.Get("/{id}", userRouterHandler.Get(db))
+	r.Get("/{id}", UserHandler.Get(db))
 
 	return r
 }
