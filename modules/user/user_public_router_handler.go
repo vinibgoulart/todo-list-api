@@ -20,7 +20,7 @@ func (u *UserPublicRouterHandler) CreateUser(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		u.storage.Insert(user)
+		u.storage.Insert(db, user)
 
 		err = json.NewEncoder(w).Encode(user)
 

@@ -23,7 +23,7 @@ func (u *UserRouterHandler) Get(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		user, err := u.storage.Get(id)
+		user, err := u.storage.Get(db, id)
 
 		if err != nil {
 			http.Error(w, "Internal error", http.StatusInternalServerError)

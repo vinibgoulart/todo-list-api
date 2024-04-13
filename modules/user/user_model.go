@@ -1,10 +1,12 @@
 package user
 
-import "github.com/vinibgoulart/todo-list/db"
+import (
+	"database/sql"
+)
 
 type UserStorage interface {
-	Get(int64) (*User, error)
-	Insert(User) (int64, error)
+	Get(*sql.DB, int64) (*User, error)
+	Insert(*sql.DB, User) (*User, error)
 }
 
 type UserStore struct {
@@ -17,42 +19,26 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func (u *UserStore) Get(id int64) (*User, error) {
-	conn, err := db.ConnectDatabase()
+func (u *UserStore) Get(db *sql.DB, id int64) (*User, error) {
+	row := db.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
+
+	user := &User{}
+
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	return user, err
+}
+
+func (u *UserStore) Insert(db *sql.DB, user User) (*User, error) {
+	sql := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id`
+
+	userCreated := &User{}
+
+	err := db.QueryRow(sql, user.Name, user.Email, user.Password).Scan(&userCreated)
 
 	if err != nil {
 		return nil, err
 	}
 
-	defer conn.Close()
-
-	row := conn.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
-
-	user := &User{}
-
-	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
-
-	return user, err
-}
-
-func (u *UserStore) Insert(user User) (int64, error) {
-	conn, err := db.ConnectDatabase()
-
-	if err != nil {
-		return -1, err
-	}
-
-	defer conn.Close()
-
-	sql := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id`
-
-	var id int64
-
-	err = conn.QueryRow(sql, user.Name, user.Email, user.Password).Scan(&id)
-
-	if err != nil {
-		return -1, err
-	}
-
-	return id, err
+	return userCreated, err
 }
