@@ -5,3 +5,6 @@ dev:
 
 test: 
 	$(DCT) up --build --abort-on-container-exit
+
+env_local:
+	cp .env.local .env
