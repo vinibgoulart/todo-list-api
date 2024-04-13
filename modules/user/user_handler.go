@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/vinibgoulart/todo-list/lib"
 )
 
 type UserHandler struct {
@@ -94,13 +95,23 @@ func (u *UserHandler) AuthenticateUser(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		passwordMatch := UserPasswordMatch(user.Password, userExistent.Password)
+		passwordMatch := HelperUserPasswordMatch(user.Password, userExistent.Password)
 
 		if !passwordMatch {
 			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte("Unauthorized"))
 			return
 		}
+
+		token, err := lib.JWTCreateToken(userExistent.ID.String())
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.Header().Set("Authorization", "Bearer "+token)
 
 		res, err := json.Marshal(userExistent)
 

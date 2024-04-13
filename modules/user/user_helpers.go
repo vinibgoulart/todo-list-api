@@ -1,5 +1,5 @@
 package user
 
-func UserPasswordMatch(password string, passwordHash string) bool {
+func HelperUserPasswordMatch(password string, passwordHash string) bool {
 	return password == passwordHash
 }
