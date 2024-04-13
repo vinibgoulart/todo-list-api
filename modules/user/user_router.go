@@ -1,15 +1,19 @@
 package user
 
-import "github.com/go-chi/chi/v5"
+import (
+	"database/sql"
 
-func UserRouter() chi.Router {
+	"github.com/go-chi/chi/v5"
+)
+
+func UserRouter(db *sql.DB) chi.Router {
 	r := chi.NewRouter()
 
 	userRouterHandler := UserRouterHandler{
 		storage: &UserStore{},
 	}
 
-	r.Get("/{id}", userRouterHandler.GetUser)
+	r.Get("/{id}", userRouterHandler.Get(db))
 
 	return r
 }

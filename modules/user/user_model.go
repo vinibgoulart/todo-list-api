@@ -1,50 +1,58 @@
 package user
 
+import "github.com/vinibgoulart/todo-list/db"
+
 type UserStorage interface {
-	ListUsers() []*User
-	GetUser(string) *User
-	StoreUser(user User)
+	Get(int64) (*User, error)
+	Insert(User) (int64, error)
 }
 
 type UserStore struct {
 }
 
 type User struct {
-	ID       string `json:"id"`
+	ID       int64  `json:"id"`
 	Name     string `json:"name"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-var users = []*User{
-	{
-		ID:       "1",
-		Name:     "Vinicius Goulart",
-		Email:    "viblaziusgoulart@gmail.com",
-		Password: "123456",
-	},
-}
+func (u *UserStore) Get(id int64) (*User, error) {
+	conn, err := db.ConnectDatabase()
 
-func (u *UserStore) ListUsers() []*User {
-	return users
-}
-
-func (u *UserStore) GetUser(id string) *User {
-	for _, user := range users {
-		if user.ID == id {
-			return user
-		}
+	if err != nil {
+		return nil, err
 	}
 
-	return nil
+	defer conn.Close()
+
+	row := conn.QueryRow(`SELECT * FROM users WHERE id=$1`, id)
+
+	user := &User{}
+
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
+
+	return user, err
 }
 
-func (u *UserStore) StoreUser(user User) {
-	exists := u.GetUser(user.ID) != nil
+func (u *UserStore) Insert(user User) (int64, error) {
+	conn, err := db.ConnectDatabase()
 
-	if exists {
-		return
+	if err != nil {
+		return -1, err
 	}
 
-	users = append(users, &user)
+	defer conn.Close()
+
+	sql := `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id`
+
+	var id int64
+
+	err = conn.QueryRow(sql, user.Name, user.Email, user.Password).Scan(&id)
+
+	if err != nil {
+		return -1, err
+	}
+
+	return id, err
 }

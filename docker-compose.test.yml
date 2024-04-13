@@ -1,9 +1,0 @@
-version: "3.9"
-services:
-  test-runner:
-    container_name: app-todo-list-test-runner
-    build:
-      context: .
-      dockerfile: Dockerfile.test
-    volumes:
-      - .:/app
