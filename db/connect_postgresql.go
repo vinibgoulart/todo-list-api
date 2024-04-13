@@ -1,19 +1,38 @@
 package db
 
-// import (
-// 	"database/sql"
+import (
+	"database/sql"
+	"fmt"
+	"os"
+	"time"
 
-// 	_ "github.com/lib/pq"
-// )
+	_ "github.com/lib/pq"
+)
 
-// func ConnectDatabase() (*sql.DB, error) {
-// 	db, err := sql.Open("postgres", "host=localhost port=5432 user=todo_list password=todo_list dbname=todo_list sslmode=disable")
+var db *sql.DB
 
-// 	if err != nil {
-// 		panic(err)
-// 	}
+func ConnectDatabase() (*sql.DB, error) {
+	if db != nil {
+		return db, nil
+	}
 
-// 	err = db.Ping()
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
 
-// 	return db, err
-// }
+	dbInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbHost, dbPort, dbUser, dbPassword, dbName)
+
+	db, err := sql.Open("postgres", dbInfo)
+	if err != nil {
+		return nil, err
+	}
+
+	db.SetMaxOpenConns(50)
+	db.SetConnMaxIdleTime(15 * time.Second)
+	db.SetConnMaxLifetime(15 * time.Second)
+
+	return db, nil
+}
