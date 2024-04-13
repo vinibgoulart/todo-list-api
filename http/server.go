@@ -26,7 +26,7 @@ func SetupHttpServer(db *sql.DB) chi.Router {
 	})
 	r.Mount("/", user.UserPublicRouter(db))
 
-	r.With(server.AuthMiddleware).Mount("/user", user.UserRouter(db))
+	r.With(server.AuthMiddleware(db)).Mount("/user", user.UserRouter(db))
 
 	return r
 }

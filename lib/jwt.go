@@ -29,10 +29,10 @@ func JWTCreateToken(identifier string) (string, error) {
 	return tokenString, nil
 }
 
-func UserVerifyToken(tokenString string) error {
+func JWTVerifyToken(tokenString string) (*jwt.Token, error) {
 	envFile, _ := godotenv.Read(".env")
 
-	secretKey := envFile["JWT_KEY"]
+	secretKey := []byte(envFile["JWT_KEY"])
 
 	tokenString = strings.Split(tokenString, " ")[1]
 
@@ -41,12 +41,12 @@ func UserVerifyToken(tokenString string) error {
 	})
 
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	if !token.Valid {
-		return fmt.Errorf("invalid token")
+		return nil, fmt.Errorf("invalid token")
 	}
 
-	return nil
+	return token, nil
 }
