@@ -75,3 +75,14 @@ curl --location 'http://localhost:8080/task' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <token>'
 ```
+
+##### PATCH /task/{id} - edit some task field
+
+```bash
+curl --location --request PATCH 'http://localhost:8080/task/:id' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <token>' \
+--data '{
+    "priority": "MEDIUM"
+}'
+```
