@@ -3,9 +3,9 @@ package db
 import (
 	"database/sql"
 	"fmt"
+	"os"
 	"time"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/vinibgoulart/todo-list/lib"
 )
@@ -17,16 +17,13 @@ func ConnectDatabase() (*sql.DB, error) {
 		return db, nil
 	}
 
-	envFile, _ := godotenv.Read(".env")
+	dbUser := os.Getenv("DB_USER")
+	dbName := os.Getenv("DB_NAME")
+	dbPort := os.Getenv("DB_PORT")
+	dbHost := os.Getenv("DB_HOST")
 
-	dbUser := envFile["DB_USER"]
-	dbPassword := envFile["DB_PASSWORD"]
-	dbName := envFile["DB_NAME"]
-	dbPort := envFile["DB_PORT"]
-	dbHost := envFile["DB_HOST"]
-
-	dbInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		dbHost, dbPort, dbUser, dbPassword, dbName)
+	dbInfo := fmt.Sprintf("host=%s port=%s user=%s dbname=%s sslmode=disable",
+		dbHost, dbPort, dbUser, dbName)
 
 	logger := lib.NewLogger("main")
 
