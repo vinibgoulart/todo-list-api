@@ -46,8 +46,8 @@ func (u *UserHandler) UserGet(db *sql.DB) http.HandlerFunc {
 
 func (u *UserHandler) UserCreate(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var user User
-		err := json.NewDecoder(r.Body).Decode(&user)
+		var userFromApi UserStruct
+		err := json.NewDecoder(r.Body).Decode(&userFromApi)
 
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
@@ -55,7 +55,14 @@ func (u *UserHandler) UserCreate(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		userCreated, err := u.storage.Insert(db, user)
+		user, err := HelperUserApiToModelMapping(&userFromApi)
+		if err != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		userCreated, err := u.storage.Insert(db, *user)
 
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
