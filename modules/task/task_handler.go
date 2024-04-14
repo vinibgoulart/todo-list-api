@@ -20,7 +20,7 @@ func (t *TaskHandler) TaskCreate(db *sql.DB) http.HandlerFunc {
 			return
 		}
 
-		task, err := HekperTaskApiToModelMapping(&taskFromApi)
+		task, err := HelperTaskApiToModelMapping(&taskFromApi)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte(err.Error()))

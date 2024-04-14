@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func HekperTaskApiToModelMapping(taskStruct *TaskStruct) (*Task, error) {
+func HelperTaskApiToModelMapping(taskStruct *TaskStruct) (*Task, error) {
 	releaseDate, err := time.Parse(time.RFC3339, taskStruct.ReleaseDate)
 	if err != nil {
 		return nil, err
