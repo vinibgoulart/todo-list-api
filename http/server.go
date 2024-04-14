@@ -8,6 +8,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	server "github.com/vinibgoulart/todo-list/http/middleware"
+	"github.com/vinibgoulart/todo-list/modules/task"
 	"github.com/vinibgoulart/todo-list/modules/user"
 )
 
@@ -27,6 +28,7 @@ func SetupHttpServer(db *sql.DB) chi.Router {
 	r.Mount("/", user.UserPublicRouter(db))
 
 	r.With(server.AuthMiddleware(db)).Mount("/user", user.UserRouter(db))
+	r.With(server.AuthMiddleware(db)).Mount("/task", task.TaskRouter(db))
 
 	return r
 }

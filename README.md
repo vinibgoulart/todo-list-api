@@ -53,3 +53,17 @@ curl --location 'http://localhost:8080/user/:id' \
 --header 'Content-Type: application/json' \
 --header 'Authorization: Bearer <token>'
 ```
+
+##### POST /task - create a new task
+
+```bash
+curl --location 'http://localhost:8080/task' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <token>' \
+--data '{
+    "name": "task one",
+    "priority": "HIGH",
+    "description": "my task description",
+    "release_date": "2024-04-15T12:00:00Z"
+}'
+```
