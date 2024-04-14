@@ -14,6 +14,7 @@ func TaskRouter(db *sql.DB) chi.Router {
 	}
 
 	r.Post("/", TaskHandler.TaskCreate(db))
+	r.Get("/", TaskHandler.TaskGetAll(db))
 
 	return r
 }

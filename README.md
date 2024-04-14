@@ -67,3 +67,11 @@ curl --location 'http://localhost:8080/task' \
     "release_date": "2024-04-15T12:00:00Z"
 }'
 ```
+
+##### GET /task - get all tasks
+
+```bash
+curl --location 'http://localhost:8080/task' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <token>'
+```

@@ -10,6 +10,7 @@ import (
 
 type TaskStorage interface {
 	Insert(*sql.DB, Task) (*Task, error)
+	GetAll(*sql.DB) ([]*Task, error)
 }
 
 type TaskStore struct {
@@ -32,12 +33,36 @@ func (t *TaskStore) Insert(db *sql.DB, task Task) (*Task, error) {
 
 	taskCreated := &Task{}
 
-	fmt.Println(taskCreated)
-
 	err := row.Scan(&taskCreated.ID, &taskCreated.Name, &taskCreated.Description, &taskCreated.Priority, &taskCreated.ReleaseDate, &taskCreated.Status)
 	if err != nil {
 		return nil, err
 	}
 
 	return taskCreated, nil
+}
+
+func (t *TaskStore) GetAll(db *sql.DB) ([]*Task, error) {
+	sql := `SELECT * FROM tasks`
+
+	rows, err := db.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	tasks := []*Task{}
+
+	for rows.Next() {
+		task := &Task{}
+		err := rows.Scan(&task.ID, &task.Name, &task.Description, &task.Priority, &task.ReleaseDate, &task.Status)
+		if err != nil {
+			return nil, err
+		}
+		tasks = append(tasks, task)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return tasks, nil
 }

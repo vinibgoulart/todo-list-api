@@ -45,3 +45,24 @@ func (t *TaskHandler) TaskCreate(db *sql.DB) http.HandlerFunc {
 		w.Write(res)
 	}
 }
+
+func (t *TaskHandler) TaskGetAll(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		tasks, err := t.storage.GetAll(db)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		res, err := json.Marshal(tasks)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+
+		w.WriteHeader(http.StatusCreated)
+		w.Write(res)
+	}
+}
