@@ -13,7 +13,7 @@ func UserRouter(db *sql.DB) chi.Router {
 		storage: &UserStore{},
 	}
 
-	r.Get("/{id}", UserHandler.Get(db))
+	r.Get("/{id}", UserHandler.UserGet(db))
 
 	return r
 }

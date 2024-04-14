@@ -13,7 +13,7 @@ type UserHandler struct {
 	storage UserStorage
 }
 
-func (u *UserHandler) Get(db *sql.DB) http.HandlerFunc {
+func (u *UserHandler) UserGet(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		id := chi.URLParam(r, "id")
 
@@ -44,7 +44,7 @@ func (u *UserHandler) Get(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func (u *UserHandler) CreateUser(db *sql.DB) http.HandlerFunc {
+func (u *UserHandler) UserCreate(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user User
 		err := json.NewDecoder(r.Body).Decode(&user)
@@ -76,7 +76,7 @@ func (u *UserHandler) CreateUser(db *sql.DB) http.HandlerFunc {
 	}
 }
 
-func (u *UserHandler) AuthenticateUser(db *sql.DB) http.HandlerFunc {
+func (u *UserHandler) UserAuthenticate(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var user User
 		err := json.NewDecoder(r.Body).Decode(&user)

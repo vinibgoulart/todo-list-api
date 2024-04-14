@@ -13,8 +13,8 @@ func UserPublicRouter(db *sql.DB) chi.Router {
 		storage: &UserStore{},
 	}
 
-	r.Post("/register", userPublicRouterHandler.CreateUser(db))
-	r.Post("/login", userPublicRouterHandler.AuthenticateUser(db))
+	r.Post("/register", userPublicRouterHandler.UserCreate(db))
+	r.Post("/login", userPublicRouterHandler.UserAuthenticate(db))
 
 	return r
 }
