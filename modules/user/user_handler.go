@@ -97,7 +97,7 @@ func (u *UserHandler) UserAuthenticate(db *sql.DB) http.HandlerFunc {
 		userExistent, err := u.storage.GetByEmail(db, user.Email)
 
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusUnauthorized)
 			w.Write([]byte(err.Error()))
 			return
 		}
