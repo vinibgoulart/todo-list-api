@@ -4,6 +4,8 @@ go 1.22.2
 
 require github.com/go-chi/chi/v5 v5.0.12
 
+require github.com/go-chi/cors v1.2.1 // indirect
+
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/semver/v3 v3.2.0 // indirect
