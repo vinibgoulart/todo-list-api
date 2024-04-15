@@ -119,6 +119,7 @@ func (u *UserHandler) UserAuthenticate(db *sql.DB) http.HandlerFunc {
 		}
 
 		w.Header().Set("Authorization", "Bearer "+token)
+		w.Header().Set("Access-Control-Expose-Headers", "Authorization")
 
 		res, err := json.Marshal(userExistent)
 
