@@ -22,7 +22,7 @@ func main() {
 	r := server.SetupHttpServer(db)
 
 	httpServer := &http.Server{
-		Addr:    ":8080",
+		Addr:    ":8081",
 		Handler: r,
 	}
 

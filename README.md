@@ -86,3 +86,11 @@ curl --location --request PATCH 'http://localhost:8080/task/:id' \
     "priority": "MEDIUM"
 }'
 ```
+
+##### DELETE /task/{id} - delete some task field
+
+```bash
+curl --location --request DELETE 'http://localhost:8081/task/:id' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <token>'
+```

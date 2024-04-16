@@ -14,6 +14,7 @@ type TaskStorage interface {
 	Insert(*sql.DB, Task) (*Task, error)
 	GetAll(*sql.DB) ([]*Task, error)
 	Update(*sql.DB, Task, string) (*Task, error)
+	Remove(*sql.DB, string)
 }
 
 type TaskStore struct {
@@ -86,4 +87,10 @@ func (t *TaskStore) Update(db *sql.DB, task Task, id string) (*Task, error) {
 	}
 
 	return taskUpdated, nil
+}
+
+func (t *TaskStore) Remove(db *sql.DB, id string) {
+	sql := `DELETE FROM tasks WHERE id=$1`
+
+	db.QueryRow(sql, id)
 }

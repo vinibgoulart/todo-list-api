@@ -110,3 +110,14 @@ func (t *TaskHandler) TaskEdit(db *sql.DB) http.HandlerFunc {
 		w.Write(res)
 	}
 }
+
+func (t *TaskHandler) TaskRemove(db *sql.DB) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "id")
+
+		t.storage.Remove(db, id)
+
+		w.WriteHeader(http.StatusCreated)
+		w.Write([]byte("Task removed successfully"))
+	}
+}
