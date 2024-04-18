@@ -15,11 +15,19 @@ func HelperTaskApiToModelMapping(taskStruct *TaskStruct) (*Task, error) {
 		return nil, errors.New("invalid priority value, use: HIGH, MEDIUM, LOW")
 	}
 
+	var taskStatus TaskStatus
+
+	if taskStruct.Status == "" {
+		taskStatus = TaskStatus(TaskStatusOpen)
+	} else {
+		taskStatus = taskStruct.Status
+	}
+
 	return &Task{
 		Name:        taskStruct.Name,
 		Description: taskStruct.Description,
 		Priority:    TaskPriority(taskStruct.Priority),
-		Status:      TaskStatus(TaskStatusOpen),
+		Status:      taskStatus,
 		ReleaseDate: releaseDate,
 	}, nil
 }
