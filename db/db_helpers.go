@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"reflect"
 	"strings"
+
+	"github.com/vinibgoulart/todo-list/utils"
 )
 
 func HelperDBUpdateTableById(tableName string, data interface{}, id string) (string, []interface{}) {
@@ -11,16 +13,17 @@ func HelperDBUpdateTableById(tableName string, data interface{}, id string) (str
 	var args []interface{}
 
 	dataType := reflect.TypeOf(data)
-
 	dataValue := reflect.ValueOf(data)
 
 	for i := 0; i < dataType.NumField(); i++ {
 		fieldName := dataType.Field(i).Name
 
+		fieldName = utils.ToSnakeCase(fieldName)
+
 		fieldValue := dataValue.Field(i).Interface()
 
 		if !reflect.DeepEqual(fieldValue, reflect.Zero(dataType.Field(i).Type).Interface()) {
-			fields = append(fields, fmt.Sprintf("%s=$%d", strings.ToLower(fieldName), len(args)+1))
+			fields = append(fields, fmt.Sprintf("%s=$%d", fieldName, len(args)+1))
 			args = append(args, fieldValue)
 		}
 	}
